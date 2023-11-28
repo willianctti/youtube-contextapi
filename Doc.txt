@@ -1,0 +1,105 @@
+			Context api
+
+Primeiramente, criamos uma nova pasta em src com o nome de contexts.
+
+o nome da nossa context chamará auth.js
+import React, { createContext, useState} from "react";
+
+
+iniciamos nosso contexto com um objeto vazio
+export const AuthContext = createContext({})
+
+
+export const AuthContext = createContext({})
+
+function AuthProvider({children}) {	// Prover nosso contexto
+    return (
+        <AuthContext.Provider value={ {nome: 'Willian'}}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+e exportamos nosso AuthProvider
+export default AuthProvider;
+
+
+
+para funcionar devemos envolver nossa app com o nosso provider:
+export default function App() {
+  return (
+    <NavigationContainer>
+      <AuthProvider>
+        <Routes/>
+      </AuthProvider>
+    </NavigationContainer>
+  );
+}
+
+
+
+
+
+e se quisermos usar o nome trazido no nosso provider em nossa tela de
+pedidos?
+
+precisamos importar primeiro o usecontext:
+import React, {useContext} from 'react';
+
+iniciamos ele e passamos o nosso contexto:
+  const {} = useContext()
+
+import { AuthContext } from '../../contexts/auth';
+  const {} = useContext(AuthContext)
+
+e na chave da nossa const passamos o que queremos trazer do nosso
+contexto
+
+const {nome} = useContext(AuthContext)
+
+assim, já podemos o utilizar em uma view, por exemplo
+  <View style={styles.container}>
+     <Text>Pagina Pedidos</Text>
+     <Text>Nome: {nome}</Text>
+   </View>
+
+
+
+
+
+e se quisermos receber algo dinâmico, por exemplo, o email digitado
+no login?
+
+criamos, primeiramente , um useState:
+    const [user, setUser] = useState({});
+
+
+fazemos uma pequena validação:
+  function signIn(email, password) {
+        if(email !== '' && password !== '') {
+            setUser({
+                email: email,
+                status: "Ativo"
+            })
+        }
+    }
+
+
+
+e passamos nosso signIn e user no nosso Provider:
+   <AuthContext.Provider value={ {nome: 'Willian', signIn, user}}>
+
+agora, em nosso login importamos o useContext
+
+usamos nosso contexto:
+const {} = useContext(AuthContext)
+
+e trazemos nosso signIn na nossa const
+  const {signIn} = useContext(AuthContext)
+
+
+e agora na nossa função ao clicar para logar, chamamos nosso signIn:
+ function handleLogin(){
+  signIn(email, password)
+ }
+
